@@ -17,3 +17,10 @@ Tentative dir structure:
 │   │   ├── features.csv
 ├── improcess.py
 ```
+
+## Training Set Structure
+1[n]: Positive Mean of the *nth* dimension
+2[n]: Negative Mean of the *nth* dimension
+3[n]: Variance/Standard Deviation of the *nth* dimension
+4[0]: Probability of a Positive Object
+4[1]: Probability of a Negative Object
