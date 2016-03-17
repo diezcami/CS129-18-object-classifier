@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 INPUT_DIR = 'data/input/'
-OUTPUT_DIR = 'data/output/'
+OUTPUT_DIR = 'data/output/'        
 
 def improcess(filename):
 	# Load image
@@ -36,5 +36,6 @@ def improcess(filename):
 	cv2.imshow('Original Image', orig)
 	cv2.imshow('Annotated Image', image)
 	cv2.waitKey(0)
+
 
 improcess('test6.jpg')
