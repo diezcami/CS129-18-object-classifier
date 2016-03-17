@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import math
 
 # Some constant declarations
 POSITIVE_PROBABILITY = 0.398809524
@@ -10,7 +11,7 @@ OUTPUT_DIR = 'data/output/'
 # Retrieved from process_training_images.py
 def process_image(filename):
     # Load image
-    orig = cv2.imread(INPUT_DIR + filename)
+    orig = cv2.imread(filename)
     img = orig.copy()
     imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
@@ -25,15 +26,19 @@ def process_image(filename):
     for i in range(len(contours)):
         image = cv2.drawContours(img, contours, i, (0,255,0), 1)
         x,y,w,h = cv2.boundingRect(contours[i])
-        cv2.rectangle(image, (x, y), (x+w, y+h), (255,0,0), 2)
         
         # Arbitrary threshold height and width is 10, 10:
         if h>20 and w>20: 
-            # HI SEAN DO YOUR STUFF HERE
-            # feature_vector = process_image_component(pass the cropped component here)
-            # is_object = check_objectivity (feature_vector)
+            feature_vector = process_image_component(orig[y:y+h, x:x+w])
+            is_object = check_objectivity(feature_vector)
             # if is_object==1: blue rectangle, else red
-            
+            if is_object == 1:
+                cv2.rectangle(image, (x, y), (x+w, y+h), (255,0,0), 2)
+            else:
+                cv2.rectangle(image, (x, y), (x+w, y+h), (0,0,255), 2)
+
+    cv2.imshow('Annotated Image', image)
+    cv2.imwrite('out.jpg', image)
     cv2.waitKey(0)
 
 # Adjusts a cropped component of an image, and retrieves/returns its feature vector
@@ -66,35 +71,35 @@ def get_feature_vector(src):
     val_list = []
     for x in range(0,8):
         for y in range(0,8):
-            val = img[x][y]
+            val = src[x][y]
             val_list.append(val)
 
     return val_list
 
 # Actual NB algorithm. Returns 1 if the image is an object and 0 otherwise.
 def check_objectivity(feature_vector):
-    positive_mean = process_training_data("positive_mean")
-    negative_mean = process_training_data("negative_mean")
-    variance = process_training_data("variance")
+    positive_mean = process_training_data('positive_mean')
+    negative_mean = process_training_data('negative_mean')
+    variance = process_training_data('variance')
     sum_positive = 0
     sum_negative = 0
     for i in range(len(feature_vector)):
-        base = 1 / math.sqrt(2 * math.pi * variance[i])
-        positive_mult = math.e * (-1 * (feature_vector[i] - positive_mean[i]) ** 2)) / (2 * variance[i]))
-        negative_mult = math.e * (-1 * (feature_vector[i] - negative_mean[i]) ** 2)) / (2 * variance[i]))
+        base = 1 / math.sqrt(2 * math.pi * float(variance[i]))
+        positive_mult = math.e * ((-1 * (float(feature_vector[i]) - float(positive_mean[i])) ** 2) / (2 * float(variance[i])))
+        negative_mult = math.e * ((-1 * (float(feature_vector[i]) - float(negative_mean[i])) ** 2) / (2 * float(variance[i])))
 
         sum_positive = sum_positive + (base * positive_mult)
-        sum_negative = sum_positive + (base * positive_mult)
+        sum_negative = sum_negative + (base * negative_mult)
 
     if sum_positive > sum_negative:
         return 1
-    else
+    else:
         return 0
 
 # Retrieves mean and variance information
 # Called in the check_objectivity method
 def process_training_data (file_name):
-    file_address = "data/training_data/" + file_name
+    file_address = 'data/training_data/' + file_name + '.txt'
     training_data = open(file_address,'r')
     dimension_data = []
     for dimension in training_data:
@@ -102,3 +107,4 @@ def process_training_data (file_name):
 
     return dimension_data
 
+process_image('test.jpg')
