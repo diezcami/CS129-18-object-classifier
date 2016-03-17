@@ -36,7 +36,7 @@ def process_image(filename):
             
     cv2.waitKey(0)
 
-# Adjusts a cropped component of an image and returns its feature vector
+# Adjusts a cropped component of an image, and retrieves/returns its feature vector
 # Retrieved from generate_training_csv.py
 def process_image_component(src):
     src = cv2.GaussianBlur( src, (3,3), 0 );    
