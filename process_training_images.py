@@ -10,14 +10,14 @@ def improcess(filename):
 	img = orig.copy()
 	imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
-	#Perform canny
+	# Perform canny
 	edges = cv2.Canny(imgray,100,200)
 
-	#Find contours
+	# Find contours
 	ret,thresh = cv2.threshold(edges,100,200,0)
 	image, contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 
-	#Draw contours
+	# Draw contours
 	for i in range(len(contours)):
 		image = cv2.drawContours(img, contours, i, (0,255,0), 1)
 		x,y,w,h = cv2.boundingRect(contours[i])
@@ -36,6 +36,5 @@ def improcess(filename):
 	cv2.imshow('Original Image', orig)
 	cv2.imshow('Annotated Image', image)
 	cv2.waitKey(0)
-
 
 improcess('test6.jpg')
