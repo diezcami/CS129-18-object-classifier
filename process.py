@@ -1,18 +1,18 @@
 import cv2
 import numpy as np
 import math
+import os
 
 # Some constant declarations
 POSITIVE_PROBABILITY = 0.398809524
 NEGATIVE_PROBABILITY = 0.601190476
-INPUT_DIR = 'data/input/'
-OUTPUT_DIR = 'data/output/'        
+INPUT_DIR = 'input/'
+OUTPUT_DIR = 'output/'
 
 # Retrieved from process_training_images.py
-def process_image(filename):
+def process_image(image, i):
     # Load image
-    orig = cv2.imread(filename)
-    img = orig.copy()
+    img = image.copy()
     imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
     # Perform canny
@@ -29,7 +29,7 @@ def process_image(filename):
         
         # Arbitrary threshold height and width is 10, 10:
         if h>20 and w>20: 
-            feature_vector = process_image_component(orig[y:y+h, x:x+w])
+            feature_vector = process_image_component(image[y:y+h, x:x+w])
             is_object = check_objectivity(feature_vector)
             # if is_object==1: blue rectangle, else red
             if is_object == 1:
@@ -38,7 +38,8 @@ def process_image(filename):
                 cv2.rectangle(image, (x, y), (x+w, y+h), (0,0,255), 2)
 
     cv2.imshow('Annotated Image', image)
-    cv2.imwrite('out.jpg', image)
+    output_name = OUTPUT_DIR + str(i) + '.jpg'
+    cv2.imwrite(output_name, image)
     cv2.waitKey(0)
 
 # Adjusts a cropped component of an image, and retrieves/returns its feature vector
@@ -107,4 +108,17 @@ def process_training_data (file_name):
 
     return dimension_data
 
-process_image('test.jpg')
+# Returns a list of images found in a directory
+def load_images_from_folder (folder):
+    images = []
+    for filename in os.listdir(folder):
+        img = cv2.imread(os.path.join(folder,filename))
+        if img is not None:
+            images.append(img)
+    return images
+
+images = load_images_from_folder (INPUT_DIR)
+i = 0
+for image in images:
+    process_image(image, i)
+    i += 1

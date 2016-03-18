@@ -3,8 +3,8 @@ import csv
 import os
 import numpy as np
 
-POSITIVE_DIR = 'positives'
-NEGATIVE_DIR = 'negatives'
+POSITIVE_DIR = 'data/positives'
+NEGATIVE_DIR = 'data/negatives'
 
 # Generates a CSV file containing the feature vectors of the pre-classified results of the processed images.
 def create_csv_output():
@@ -16,7 +16,7 @@ def create_csv_output():
 	negative_feature_vectors = get_all_image_feature_vectors (negative_images, False)
 
     # Input feature vectors into a CSV file
-	with open ("output.csv", "wb") as f:
+	with open ("data/training_data/output.csv", "wb") as f:
 		writer = csv.writer(f)
 		writer.writerows(positive_feature_vectors)
 		writer.writerows(negative_feature_vectors)
