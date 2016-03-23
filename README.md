@@ -20,13 +20,14 @@ A program that uses Naive Bayes classification and OpenCV functionalities to sol
 │   │   ├── output.csv
 │   │   ├── negative_mean.txt
 │   │   ├── positive_mean.txt
-│   │   ├── variance.txt
+│   │   ├── variance_pos.txt
+│   │   ├── variance_neg.txt
 ├── generate_training_csv.py
 ├── process.py - Main driver file
 ├── process_training_images.py
 ```
 
-## Files
+## Scripts
 * **process_training_images.py**
   * Processes images in the *data/input* folder by cropping them according to the bounding rectangles of contours. The cropped results in the *data/output* folder will manually be classified into objects (*data/positives*) and non-objects (*data/negatives*).
 * **generate_training_csv.py**
