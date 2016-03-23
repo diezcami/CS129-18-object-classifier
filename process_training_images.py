@@ -23,7 +23,7 @@ def improcess(filename):
 		x,y,w,h = cv2.boundingRect(contours[i])
 		cv2.rectangle(image, (x, y), (x+w, y+h), (255,0,0), 2)
 		
-		# Arbitrary threshold height and width is 10, 10:
+		# Arbitrary threshold height and width is 20, 20:
 		if h>20 and w>20: 
 			cropimg = orig[y:y+h, x:x+w]
 			output_name = OUTPUT_DIR + filename[:-4] + str(i) + '.jpg'

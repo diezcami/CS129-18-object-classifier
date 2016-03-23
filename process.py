@@ -10,7 +10,7 @@ INPUT_DIR = 'input/'
 OUTPUT_DIR = 'output/'
 
 # Retrieved from process_training_images.py
-def process_image(image, i):
+def process_image(image, id):
     # Load image
     img = image.copy()
     imgray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -27,7 +27,7 @@ def process_image(image, i):
         image = cv2.drawContours(img, contours, i, (0,255,0), 1)
         x,y,w,h = cv2.boundingRect(contours[i])
         
-        # Arbitrary threshold height and width is 10, 10:
+        # Arbitrary threshold height and width is 20, 20:
         if h>20 and w>20: 
             feature_vector = process_image_component(image[y:y+h, x:x+w])
             is_object = check_objectivity(feature_vector)
@@ -38,7 +38,7 @@ def process_image(image, i):
                 cv2.rectangle(image, (x, y), (x+w, y+h), (0,0,255), 2)
 
     cv2.imshow('Annotated Image', image)
-    output_name = OUTPUT_DIR + str(i) + '.jpg'
+    output_name = OUTPUT_DIR + str(id) + '.jpg'
     cv2.imwrite(output_name, image)
     cv2.waitKey(0)
 
@@ -118,7 +118,5 @@ def load_images_from_folder (folder):
     return images
 
 images = load_images_from_folder (INPUT_DIR)
-i = 0
-for image in images:
+for i, image in enumerate(images):
     process_image(image, i)
-    i += 1
